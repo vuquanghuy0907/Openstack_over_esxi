@@ -14,6 +14,7 @@ Single physical NIC (ens160) → enslaved into br0
 Management (192.168.25.0/24) + VM external/floating IP (same subnet!) both traverse br0
 Host IP moved OFF ens160 → now bound to br0
 The neutron_external_interface planned via veth pair into br0
+
 ```bash
    [VM mgmt+ext traffic] ─┐
                           │
@@ -21,6 +22,7 @@ The neutron_external_interface planned via veth pair into br0
                           │
       [Host mgmt SSH] ────┘
 ```
+
 This highlights:
 - ens160 has no IP anymore (just a bridge member)
 - br0 owns the host's management IP
@@ -179,7 +181,6 @@ Instead of separating networks, I collapsed everything into **one NIC → one br
 
 ###### Targeted Ubuntu 22.04 ######
 # Network topology: Openstack over VCenter
-
 ```bash
                           +--------------------+
                           |   Upstream Switch  |
@@ -195,7 +196,7 @@ Instead of separating networks, I collapsed everything into **one NIC → one br
                      |             |             |
                      |             |             |
               +------+------+ +------+------+ +---------+
-              |  VM: aio01 | |  VM: aio02 | |  VM: aio03 | <--- VCenter guest, ubuntu server 24.04
+              |  VM: aio01 | |  VM: aio02 | |  VM: aio03 | <--- VCenter guests, ubuntu server 24.04
               | Controller | |  Compute   | |  Compute   | 
               +------------+ +------------+ +------------+
                      |             |             |
@@ -589,7 +590,7 @@ sudo pip install -U pip setuptools
 pip install --upgrade pip
 
 ```
-### ✅ Step 2. Cleanup Old Deployment (Inventories, Containers, and Dependencies) [Do on all 3 machine, as we need python3.10 and virt-env on all hosts]
+### ✅ Step 2. Cleanup Old Deployment (Inventories, Containers, and Dependencies) [Do on all 5 machine, as we need python3.10 and virt-env on all hosts]
 
 > If you're working on a reused or older PC that may have prior Kolla or Docker deployments, it's important to fully clean up before starting fresh.
 
@@ -668,7 +669,7 @@ sudo apt autoremove --purge -y
 sudo apt clean
 ```
 
-### ✅ Step 3. Setup Kolla-Ansible, Docker CE, and Ansible (caracal) [Do on all 3 machine, as we need python3.10, kolla-ansible, openstack installer (I guess) and virt-env on all hosts]
+### ✅ Step 3. Setup Kolla-Ansible, Docker CE, and Ansible (caracal) [Do on all 5 machine, as we need python3.10, kolla-ansible, openstack installer (I guess) and virt-env on all hosts]
 
 #### 1. Install kolla-ansible
 
@@ -1250,7 +1251,7 @@ kolla-ansible genconfig -i /etc/kolla/ansible/inventory/multinode
      ```
 
 3. **Pull the Docker images (I skipped this as my `kolla-ansible deploy` ran well)**:
-# [Note]: Must check and take over the ownership of the /var/lib/docker/tmp/ (need to be manually done on 3 machines)
+# [Note]: Must check and take over the ownership of the /var/lib/docker/tmp/ (need to be manually done on 5 machines)
   ```bash
   sudo systemctl restart docker # <-- I skipped this
   sudo rm -rf /var/lib/docker/tmp/ # <-- I skipped this
@@ -1932,6 +1933,3 @@ cat /home/ubuntu/.ssh/authorized_keys
 # Also verify the cloud-init datasource:
 sudo journalctl -u cloud-init
 ```
-
-
-

@@ -14,13 +14,13 @@ Single physical NIC (ens160) → enslaved into br0
 Management (192.168.25.0/24) + VM external/floating IP (same subnet!) both traverse br0
 Host IP moved OFF ens160 → now bound to br0
 The neutron_external_interface planned via veth pair into br0
-
+```bash
    [VM mgmt+ext traffic] ─┐
                           │
  ens160 (no IP) ──> br0 (IP: 192.168.25.x/24, gw 192.168.25.1) ──> upstream LAN
                           │
       [Host mgmt SSH] ────┘
-
+```
 This highlights:
 - ens160 has no IP anymore (just a bridge member)
 - br0 owns the host's management IP
@@ -1932,5 +1932,6 @@ cat /home/ubuntu/.ssh/authorized_keys
 # Also verify the cloud-init datasource:
 sudo journalctl -u cloud-init
 ```
+
 
 

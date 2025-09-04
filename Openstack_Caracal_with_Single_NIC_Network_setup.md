@@ -180,6 +180,7 @@ Instead of separating networks, I collapsed everything into **one NIC → one br
 ###### Targeted Ubuntu 22.04 ######
 # Network topology: Openstack over VCenter
 
+```bash
                           +--------------------+
                           |   Upstream Switch  |
                           | (192.168.25.0/24)  |
@@ -209,7 +210,7 @@ Instead of separating networks, I collapsed everything into **one NIC → one br
 Management     API Traffic     Tenant VXLAN     Provider VLAN     Storage
 Traffic        (Keystone,      (VM Overlay)     (Flat/Tagged)     Traffic
                Nova, etc.)
-
+```
 * **Environment:** OpenStack on top of VMware vCenter/ESXi
 * **Network:** Single NIC per host (`ens160`), bridged into `br0`
 * **Traffic:** Management + API + Tenant (VM) traffic multiplexed over the same bridge
@@ -1931,3 +1932,4 @@ cat /home/ubuntu/.ssh/authorized_keys
 # Also verify the cloud-init datasource:
 sudo journalctl -u cloud-init
 ```
+

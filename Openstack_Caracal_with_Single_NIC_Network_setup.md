@@ -296,7 +296,7 @@ sudo chmod 0440 /etc/sudoers.d/deployer
 ```
 ########### FROM NOW ON, WE WILL ASSUME THAT WE ARE RUNNING AS `deployer` USER ###########
 
-### 🔐 Passwordless SSH Setup for all 3 hosts (required for Kolla-Ansible)
+### 🔐 Passwordless SSH Setup for all 5 hosts (required for Kolla-Ansible)
 
 # 1️⃣ Generate SSH key pair (on aio00 node)
 ```bash
@@ -688,7 +688,7 @@ pip install .
 which kolla-ansible
 #--> `/home/deployer/kolla-venv/bin/kolla-ansible`
 ```
-#### 2. Install Docker CE (clean and compatible) [Do this on all 3 hosts]
+#### 2. Install Docker CE (clean and compatible) [Do this on all 5 hosts]
 # This step is Optional to download images from `download.docker.com`
 
 ```bash
@@ -760,7 +760,7 @@ docker --version
 
 ## Setup Ansible and Verify Default Paths 
 
-### ✅ Step 1. Install Ansible compatible with Caracal (3 hosts, as we need ansible and its dependancies on all 3 host too)
+### ✅ Step 1. Install Ansible compatible with Caracal (5 hosts, as we need ansible and its dependancies on all 5 host too)
 
 ```bash
 # ansible-core 2.12.10 = matches Yoga's tested version
@@ -782,7 +782,7 @@ docker --version
 
 This step ensures you understand where Kolla-Ansible roles expect files to be written and verifies **both path references and ownership**, especially on reused or restricted systems.
 
-####  1. Verify Python Virtual Environment and Kolla-Ansible Role Paths (3 hosts???)
+####  1. Verify Python Virtual Environment and Kolla-Ansible Role Paths (5 hosts???)
 
 ```bash
 # Activate your virtual environment
@@ -819,7 +819,7 @@ Kolla-Ansible role defaults often reference:
 - Optional external service endpoints
 - Templated values (e.g., using `{{ }}` syntax for host/project-specific output)
 
-#### 2. Generate and check Runtime-Critical Directories (Used During Actual Deployment) (3 hosts???)
+#### 2. Generate and check Runtime-Critical Directories (Used During Actual Deployment) (5 hosts???)
 
 -  **Generate and  check common Kolla/OpenStack runtime directories and ensure your user can write to them**
 ```bash
@@ -839,7 +839,7 @@ done
 - Persistent service state (e.g., MariaDB data, RabbitMQ queues)
 
 
-### ✅ Step 3: Copy and Configure Inventory and Defaults for Kolla-Ansible (3 hosts???)
+### ✅ Step 3: Copy and Configure Inventory and Defaults for Kolla-Ansible (5 hosts???)
 
 Kolla-Ansible expects its main configuration and inventory files under `/etc/kolla`. This step prepares that directory and populates it with example files.
 
@@ -1114,7 +1114,7 @@ kolla-ansible bootstrap-servers -i /etc/kolla/ansible/inventory/multinode
 - Docker and Python dependencies will be installed.
 - SSH key exchange and Ansible setup will be validated.
 
-- **Clean all old docker images (do this on 3 hosts) [Optional. If you have fresh machine, skip this step]** 
+- **Clean all old docker images (do this on 5 hosts) [Optional. If you have fresh machine, skip this step]** 
 ```bash
 source ~/kolla-venv/bin/activate
 ## Stop every container that was started by Kolla (they all carry the 'kolla_version' label)
@@ -1304,7 +1304,7 @@ kolla-build -n quay.io/openstack.kolla --threads 8 --skip-existing --base ubuntu
 
 ---
 
-#### Step 2 **Re-tag (if needed)** [Do this on 3 hosts if you do] [I totally skipped this whole step]:
+#### Step 2 **Re-tag (if needed)** [Do this on 5 hosts if you do] [I totally skipped this whole step]:
 
    If Kolla expects the `quay.io/...` format for the image, you can re-tag it:
    Usage:  docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
@@ -1623,7 +1623,7 @@ openstack subnet create public1-subnet \
 [Step 3:Create private network and router]
 ```bash
 # If server got reboot, you need to create veth pair again (Section [Creating veth pair] note above), enable kernel module (Section [Enable kernel modules] above) + required flag like ip forwarding (Section [Enable require flag] nove above) and then run deploy + post-deploy one more time
-# Run deploy, post-deploy again after reboot. Re-reploy does not clear all of the previous state and install from fresh. It just bring the service of all 3 hosts up. See more command on "kolla-ansible --help"
+# Run deploy, post-deploy again after reboot. Re-reploy does not clear all of the previous state and install from fresh. It just bring the service of all 5 hosts up. See more command on "kolla-ansible --help"
 ## The command "kolla-ansible deploy" will only
 #   Detect already existing containers, configs, volumes
 #   Only create/start containers that are missing or stopped
@@ -1932,4 +1932,5 @@ cat /home/ubuntu/.ssh/authorized_keys
 # Also verify the cloud-init datasource:
 sudo journalctl -u cloud-init
 ```
+
 
